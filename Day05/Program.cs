@@ -1,25 +1,44 @@
-﻿Console.WriteLine("Input file ?");
-var file = Console.ReadLine();
-
-if (!File.Exists(file))
+﻿
+void First()
 {
-    Console.WriteLine("File not found");
-    return;
+    var allPoints = new List<Pt>();
+
+    var lines = File.ReadAllLines("input.txt");
+
+    foreach (var line in lines)
+    {
+        var pts = new Line(line);
+        allPoints.AddRange(pts.GetAllPoints());
+    }
+
+    var groups = allPoints.GroupBy(p => p).Where(g => g.Count() > 1);
+
+    Console.WriteLine($"Result: {groups.Count()}");
 }
 
-var allPoints = new List<Pt>();
-
-var lines = File.ReadAllLines(file);
-
-foreach (var line in lines)
+void Second()
 {
-    var pts = new Line(line);
-    allPoints.AddRange(pts.GetAllPoints());
+    var allPoints = new List<Pt>();
+
+    var lines = File.ReadAllLines("input.txt");
+
+    foreach (var line in lines)
+    {
+        var pts = new Line(line);
+        allPoints.AddRange(pts.GetAllPoints(true));
+    }
+
+    var groups = allPoints.GroupBy(p => p).Where(g => g.Count() > 1);
+
+    Console.WriteLine($"Result: {groups.Count()}");
 }
 
-var groups = allPoints.GroupBy(p => p).Where(g => g.Count() > 1);
-
-Console.WriteLine($"Result: {groups.Count()}");
+Console.WriteLine("First or second half ? (1 or 2)");
+switch (Console.ReadLine() ?? string.Empty)
+{
+    case "2": Second(); break;
+    default: First(); break;
+}
 
 class Line
 {
@@ -33,7 +52,7 @@ class Line
     public Pt Pt1 { get; set; }
     public Pt Pt2 { get; set; }
 
-    public IEnumerable<Pt> GetAllPoints()
+    public IEnumerable<Pt> GetAllPoints(bool computeDiagonals = false)
     {
         if (Pt1.X == Pt2.X) // Same column
         {
@@ -44,9 +63,13 @@ class Line
             return GenerateRowPoints(Pt1.Y, Math.Min(Pt1.X, Pt2.X), Math.Max(Pt1.X, Pt2.X));
 
         }
-        else // diagonal
+        else if (computeDiagonals) // diagonal
         {
             return GenerateDiagonalPoints(Pt1, Pt2);
+        }
+        else
+        {
+            return Enumerable.Empty<Pt>();
         }
     }
 

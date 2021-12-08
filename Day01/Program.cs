@@ -1,16 +1,6 @@
-﻿Console.WriteLine("Input file ?");
-var file = Console.ReadLine();
-
-if (!File.Exists(file))
+﻿void First()
 {
-    Console.WriteLine("File not found");
-    return;
-}
-
-
-void First(string file)
-{
-    var values = File.ReadAllLines(file).Select(x => int.Parse(x)).ToList();
+    var values = File.ReadAllLines("input.txt").Select(x => int.Parse(x)).ToList();
 
     int cpt = 0;
     int lastValue = values.First();
@@ -21,9 +11,9 @@ void First(string file)
     Console.WriteLine($"Result: {cpt}");
 }
 
-void Second(string file)
+void Second()
 {
-    var values = File.ReadAllLines(file).Select(x => int.Parse(x)).ToList();
+    var values = File.ReadAllLines("input.txt").Select(x => int.Parse(x)).ToList();
 
     int cpt = 0;
     int lastValue = values.Take(3).Sum();
@@ -43,15 +33,8 @@ void Second(string file)
 }
 
 Console.WriteLine("First or second half ? (1 or 2)");
-string choice = Console.ReadLine();
-
-switch (choice)
+switch (Console.ReadLine() ?? string.Empty)
 {
-    case "2":
-        Second(file);
-        break;
-
-    default:
-        First(file);
-        break;
+    case "2": Second(); break;
+    default: First(); break;
 }

@@ -26,7 +26,29 @@
 
 void Second()
 {
-   
+    var values = File.ReadAllText("input.txt")
+                      .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                      .Select(i => int.Parse(i))
+                      .ToList();
+
+    var minFuel = int.MaxValue;
+
+    for (int i = values.Min(); i < values.Max(); i++)
+    {
+        int fuel = 0;
+        foreach (var value in values)
+        {
+            var diff = Math.Abs(value - i);
+            fuel += Enumerable.Range(1, diff).Sum();
+        }
+
+        if (fuel < minFuel)
+        {
+            minFuel = fuel;
+        }
+    }
+
+    Console.WriteLine($"Result: {minFuel}");
 }
 
 Console.WriteLine("First or second half ? (1 or 2)");
